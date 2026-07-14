@@ -1,0 +1,34 @@
+{
+  "$schema": "./config.schema.json",
+  "tracker": "github",
+  "sizing": {
+    "scale": [1, 2, 3, 5, 8],
+    "splitThreshold": 8,
+    "referenceStory": {
+      "ref": "#42",
+      "title": "Password reset via email link",
+      "points": 3,
+      "summary": "A signed-out user requests a reset, receives an email link, and sets a new password. Touches the sign-in UI, an API endpoint, email delivery, and the user store."
+    }
+  },
+  "github": {
+    "owner": "your-org",
+    "repo": "your-repo",
+    "defaultMilestone": "Backlog",
+    "project": {
+      "number": 1,
+      "nodeId": "PVT_replace_me",
+      "statusFieldId": "PVTSSF_replace_me",
+      "readyOptionId": "replace_me",
+      "estimateFieldId": "PVTF_replace_me"
+    }
+  },
+  "jira": {
+    "siteUrl": "https://your-org.atlassian.net",
+    "projectKey": "PROJ",
+    "issueTypeForFeature": "Story",
+    "issueTypeForTask": "Task",
+    "storyPointsFieldId": "customfield_10016",
+    "readyStatusName": "Ready"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/refine-story/refine-story/config.schema.json",
+  "title": "refine-story project configuration",
+  "description": "Per-project configuration for the refine-story skill. Place as .refine-story.json at the project root.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "description": "Optional pointer to this schema for editor autocomplete.",
+      "type": "string"
+    },
+    "tracker": {
+      "description": "Which issue tracker Step 6 writes to.",
+      "enum": ["github", "jira"]
+    },
+    "sizing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scale": {
+          "description": "Fibonacci point scale used for relative estimation.",
+          "type": "array",
+          "items": { "type": "number" },
+          "default": [1, 2, 3, 5, 8]
+        },
+        "splitThreshold": {
+          "description": "Stories estimated at or above this value must be split before entering a sprint.",
+          "type": "number",
+          "default": 8
+        },
+        "referenceStory": {
+          "description": "The relative-estimation anchor: a real completed story the team agrees is a solid medium (3 points).",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ref": { "type": "string", "description": "Tracker id of the anchor story (e.g. #5 or PROJ-5)." },
+            "title": { "type": "string" },
+            "points": { "type": "number", "default": 3 },
+            "summary": { "type": "string", "description": "1-3 implementation-neutral sentences." }
+          },
+          "required": ["title", "points"]
+        }
+      }
+    },
+    "github": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "owner": { "type": "string" },
+        "repo": { "type": "string" },
+        "defaultMilestone": { "type": "string" },
+        "project": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "GitHub Projects (v2) field ids for Status + Estimate automation. Omit to skip.",
+          "properties": {
+            "number": { "type": "number" },
+            "nodeId": { "type": "string" },
+            "statusFieldId": { "type": "string" },
+            "readyOptionId": { "type": "string" },
+            "estimateFieldId": { "type": "string" }
+          },
+          "required": ["number", "nodeId", "statusFieldId", "readyOptionId", "estimateFieldId"]
+        }
+      },
+      "required": ["owner", "repo"]
+    },
+    "jira": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cloudId": { "type": "string" },
+        "siteUrl": { "type": "string", "description": "Used to resolve cloudId if cloudId is not set." },
+        "projectKey": { "type": "string" },
+        "issueTypeForFeature": { "type": "string", "default": "Story" },
+        "issueTypeForTask": { "type": "string", "default": "Task" },
+        "storyPointsFieldId": { "type": "string", "description": "Custom field id for Story Points, e.g. customfield_10016." },
+        "readyStatusName": { "type": "string", "default": "Ready" }
+      },
+      "required": ["projectKey"]
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "tracker": { "const": "github" } }, "required": ["tracker"] },
+      "then": { "required": ["github"] }
+    },
+    {
+      "if": { "properties": { "tracker": { "const": "jira" } }, "required": ["tracker"] },
+      "then": { "required": ["jira"] }
+    }
+  ]
+}
