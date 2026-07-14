@@ -11,11 +11,8 @@
     "story",
     "refinement",
     "grooming",
-    "invest",
     "acceptance-tests",
-    "estimation",
-    "github",
-    "jira"
+    "estimation"
   ],
   "license": "MIT"
 }

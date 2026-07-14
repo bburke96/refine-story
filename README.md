@@ -23,13 +23,16 @@ An interactive, review-at-each-step refinement that yields:
 ## Architecture: one methodology, many adapters
 
 ```
-skills/refine-story/
-├── SKILL.md            # Claude Code adapter (entry point)
-├── methodology.md      # ★ tool-neutral Clean Agile playbook — the single source of truth
-└── references/
-    ├── config.md       # config schema, resolution, interactive fallback
-    ├── github.md       # GitHub Issues + Projects adapter
-    └── jira.md         # Jira / Atlassian adapter
+skills/
+├── refine-story/
+│   ├── SKILL.md            # Claude Code adapter (entry point)
+│   ├── methodology.md      # ★ tool-neutral Clean Agile playbook — the single source of truth
+│   └── references/
+│       ├── config.md       # config schema, resolution, interactive fallback
+│       ├── github.md       # GitHub Issues + Projects adapter
+│       └── jira.md         # Jira / Atlassian adapter
+└── refine-story-setup/
+    └── SKILL.md            # interview-style setup — writes a project's .refine-story.json
 ```
 
 The methodology is deliberately separated from any tool or model. `methodology.md` names no agent,
@@ -60,9 +63,14 @@ the output into your tracker by hand.
 
 ## Configure
 
-Copy `.refine-story.example.json` to `.refine-story.json` at your project root and edit it. The
-skill reads this file; when a needed value is missing it will ask you and offer to save it back — so
-you can also start with an empty file and let it fill in over time. Schema: `config.schema.json`.
+**Guided (recommended):** run the setup skill — *"set up refine-story for this project"* — and it
+will interview you for the tracker and reference story, auto-discover what it can (GitHub owner/repo
+from your git remote, Project field ids via the `gh` CLI, Jira cloud/field ids via the Atlassian
+MCP), then write and validate `.refine-story.json` in your project root.
+
+**Manual:** copy `.refine-story.example.json` to `.refine-story.json` at your project root and edit
+it. The `refine-story` skill also fills gaps on the fly — when a needed value is missing it asks and
+offers to save it back, so you can even start from an empty file. Schema: `config.schema.json`.
 
 | Key | Purpose |
 |-----|---------|

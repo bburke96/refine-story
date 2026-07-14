@@ -1,7 +1,6 @@
 ---
 name: refine-story
 description: Refine a tracker ticket or story idea using Clean Agile principles (INVEST, acceptance tests, relative sizing). Works with GitHub Issues or Jira/Atlassian via a per-project config file. Use when the user asks to refine a story, groom a ticket, or wants help writing acceptance tests.
-tools: Read, Glob, Grep, Bash
 ---
 
 # Story Refinement — Clean Agile

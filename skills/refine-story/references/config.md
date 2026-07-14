@@ -1,11 +1,11 @@
 # Configuration — `.refine-story.json`
 
 All project-specific values live in a `.refine-story.json` file at the root of the consuming
-project. Nothing is hardcoded in the skill. This file documents the schema, how to resolve it, and
-what to do when it is missing or incomplete.
+project. Nothing is hardcoded in the skill. This file explains how to resolve that config, what each
+field means, and what to do when it is missing or incomplete.
 
-The authoritative machine-readable schema is `config.schema.json` at the repo root; a filled-in
-example is `.refine-story.example.json`.
+The authoritative machine-readable structure is `config.schema.json` at the repo root; a filled-in
+example is `.refine-story.example.json`. This file does not restate the shape — it points at those.
 
 ## Resolution order
 
@@ -17,55 +17,15 @@ example is `.refine-story.example.json`.
 4. Never substitute a default that is tied to any particular project. The only safe built-in
    defaults are the generic sizing ones (`scale`, `splitThreshold`).
 
-## Schema
+## Shape
 
-```jsonc
-{
-  // Which tracker Step 6 writes to. Required if the user wants to persist the story.
-  "tracker": "github",                     // "github" | "jira"
+The full structure — every field, its type, defaults, and which fields are required when — is
+defined once in **`config.schema.json`** (the source of truth). A filled-in, copy-paste starter is
+**`.refine-story.example.json`**. Read those for the literal shape rather than duplicating it here.
 
-  "sizing": {
-    "scale": [1, 2, 3, 5, 8],              // optional; Fibonacci points, defaults shown
-    "splitThreshold": 8,                   // optional; stories at/above this must be split
-
-    // The relative-estimation anchor. REQUIRED before Step 4 sizing.
-    // If absent, ask the user to name a real "medium / 3-point" story, then offer to save it.
-    "referenceStory": {
-      "ref": "#5",                         // tracker id of the anchor story (optional but nice)
-      "title": "A representative medium story",
-      "points": 3,
-      "summary": "1–3 implementation-neutral sentences describing the anchor story."
-    }
-  },
-
-  // Present when tracker === "github".
-  "github": {
-    "owner": "your-org-or-user",
-    "repo": "your-repo",
-    "defaultMilestone": "Backlog",         // optional; milestone title to attach on create
-
-    // Optional. GitHub Projects (v2) field ids for Status + Estimate. Omit the whole block to
-    // skip Project-field updates. Look these up once with the gh CLI (see references/github.md).
-    "project": {
-      "number": 3,
-      "nodeId": "PVT_xxxxxxxx",
-      "statusFieldId": "PVTSSF_xxxxxxxx",
-      "readyOptionId": "xxxxxxxx",         // option id of the "Ready" Status value
-      "estimateFieldId": "PVTF_xxxxxxxx"   // number field for story points
-    }
-  },
-
-  // Present when tracker === "jira".
-  "jira": {
-    "cloudId": "your-atlassian-cloud-id",  // or "siteUrl": "https://your.atlassian.net"
-    "projectKey": "PROJ",
-    "issueTypeForFeature": "Story",        // issue type for user-facing stories
-    "issueTypeForTask": "Task",            // issue type for infra/tooling stories
-    "storyPointsFieldId": "customfield_10016", // the Story Points custom field id
-    "readyStatusName": "Ready"             // status to transition to when refinement is done
-  }
-}
-```
+Top-level keys: `tracker`, `sizing` (with `scale`, `splitThreshold`, `referenceStory`), `github`,
+and `jira`. The notes below cover only what the schema can't express — when each value matters and
+how to source it.
 
 ## Field notes
 
