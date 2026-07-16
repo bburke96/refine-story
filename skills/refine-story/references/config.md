@@ -23,7 +23,7 @@ The full structure — every field, its type, defaults, and which fields are req
 defined once in **`config.schema.json`** (the source of truth). A filled-in, copy-paste starter is
 **`.refine-story.example.json`**. Read those for the literal shape rather than duplicating it here.
 
-Top-level keys: `tracker`, `sizing` (with `scale`, `splitThreshold`, `referenceStory`), `github`,
+Top-level keys: `tracker`, `sizing` (with `scale`, `splitThreshold`, `goldenStory`), `github`,
 and `jira`. The notes below cover only what the schema can't express — when each value matters and
 how to source it.
 
@@ -31,9 +31,13 @@ how to source it.
 
 - **`tracker`** — drives which adapter Step 6 uses. If the user only wants the refined-story text
   and no ticket write, `tracker` is not needed.
-- **`sizing.referenceStory`** — the single most important config value. Relative estimation is
-  meaningless without a shared anchor. When missing, prompt: *"What's a completed story your team
-  agrees is a solid medium — worth 3 points? I'll use it as the sizing anchor."*
+- **`sizing.goldenStory`** — the Golden Story (Clean Agile), the single most important config value.
+  Relative estimation is meaningless without a shared anchor. Its **`body`** holds the full story
+  content copied from the tracker; sizing compares against that saved snapshot, so the `refine-story`
+  skill never re-fetches the anchor from the tracker. Populate it with the `refine-story-setup` or
+  `update-golden-story` skill (both read the tracker via `ref`). When it's missing entirely, prompt:
+  *"What's a completed story your team agrees is a solid medium — worth 3 points? I'll use it as the
+  sizing anchor."*
 - **`github.project`** — GitHub Projects field ids are stable per project; capture them once. See
   `references/github.md` for the discovery commands. Omit the block entirely if the project doesn't
   use Projects or you don't want field automation.

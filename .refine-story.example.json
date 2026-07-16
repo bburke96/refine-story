@@ -4,11 +4,12 @@
   "sizing": {
     "scale": [1, 2, 3, 5, 8],
     "splitThreshold": 8,
-    "referenceStory": {
+    "goldenStory": {
       "ref": "#42",
       "title": "Password reset via email link",
       "points": 3,
-      "summary": "A signed-out user requests a reset, receives an email link, and sets a new password. Touches the sign-in UI, an API endpoint, email delivery, and the user store."
+      "summary": "A signed-out user requests a reset, receives an email link, and sets a new password. Touches the sign-in UI, an API endpoint, email delivery, and the user store.",
+      "body": "As a signed-out user, I want to reset my password via an emailed link, so that I can regain access without contacting support.\n\nAcceptance Tests:\n1. Given I'm on the sign-in screen When I request a reset for my registered email Then I'm told a reset link has been sent.\n2. Given I open a valid, unexpired reset link When I submit a new password Then my password is changed and I can sign in with it.\n3. Given I open an expired or already-used reset link When the page loads Then I'm told the link is no longer valid and offered a new one.\n4. Given I request a reset for an email that isn't registered Then I see the same confirmation (no account enumeration)."
     }
   },
   "github": {

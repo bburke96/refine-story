@@ -2,7 +2,7 @@
 
 Refine a story idea or tracker ticket into a well-formed backlog item using the principles from
 Robert C. Martin's *Clean Agile* — **INVEST** review, **Given/When/Then** acceptance tests,
-**relative** story-point sizing against a reference story, and Clean Agile **split** patterns for
+**relative** story-point sizing against a Golden Story, and Clean Agile **split** patterns for
 stories that are too big. Then, optionally, write the result to your issue tracker.
 
 It works with **GitHub Issues** or **Jira/Atlassian**, is **infrastructure- and
@@ -16,7 +16,7 @@ An interactive, review-at-each-step refinement that yields:
 - A tightened **title** and `As a / I want to / So that` user story
 - 3–6 **acceptance tests** in Given/When/Then, verifiable by a non-developer, plus separate
   **implementation notes** for internal concerns
-- A **relative estimate** (Fibonacci: 1, 2, 3, 5, 8, or Spike) anchored to your team's reference story
+- A **relative estimate** (Fibonacci: 1, 2, 3, 5, 8, or Spike) anchored to your team's Golden Story
 - **Recommended splits** when a story is too large to fit one iteration
 - Optionally, a created/updated ticket with **Status → Ready** and the **point estimate** recorded
 
@@ -31,8 +31,10 @@ skills/
 │       ├── config.md       # config schema, resolution, interactive fallback
 │       ├── github.md       # GitHub Issues + Projects adapter
 │       └── jira.md         # Jira / Atlassian adapter
-└── refine-story-setup/
-    └── SKILL.md            # interview-style setup — writes a project's .refine-story.json
+├── refine-story-setup/
+│   └── SKILL.md            # interview-style setup — writes a project's .refine-story.json
+└── update-golden-story/
+    └── SKILL.md            # set/refresh the sizing anchor from a tracker ticket
 ```
 
 The methodology is deliberately separated from any tool or model. `methodology.md` names no agent,
@@ -64,7 +66,7 @@ the output into your tracker by hand.
 ## Configure
 
 **Guided (recommended):** run the setup skill — *"set up refine-story for this project"* — and it
-will interview you for the tracker and reference story, auto-discover what it can (GitHub owner/repo
+will interview you for the tracker and Golden Story, auto-discover what it can (GitHub owner/repo
 from your git remote, Project field ids via the `gh` CLI, Jira cloud/field ids via the Atlassian
 MCP), then write and validate `.refine-story.json` in your project root.
 
@@ -75,7 +77,7 @@ offers to save it back, so you can even start from an empty file. Schema: `confi
 | Key | Purpose |
 |-----|---------|
 | `tracker` | `"github"` or `"jira"` — which adapter Step 6 uses. |
-| `sizing.referenceStory` | **The estimation anchor.** A real completed story your team agrees is a solid medium (3 points). Required before sizing. |
+| `sizing.goldenStory` | **The Golden Story** — the estimation anchor. A real completed story your team agrees is a solid medium (3 points). Its `body` is the full story copied from the tracker; sizing compares against that saved snapshot. Required before sizing. |
 | `sizing.scale` / `sizing.splitThreshold` | Optional. Fibonacci scale (default `[1,2,3,5,8]`) and the point value at/above which a story must be split (default `8`). |
 | `github.owner` / `github.repo` | Target repository. |
 | `github.defaultMilestone` | Optional milestone attached on create. |
@@ -98,12 +100,16 @@ Requires an Atlassian MCP server (Atlassian's official Remote MCP, or `sooperset
 The adapter detects the available tools at runtime and maps them to read/create/update/transition
 operations — see `skills/refine-story/references/jira.md`.
 
-## The reference story (why it matters)
+## The Golden Story (why it matters)
 
 Story points are **relative**, not hours. The skill sizes each story by comparing it to *your*
-reference story rather than to an absolute scale, which keeps estimates honest and team-specific.
-Set `sizing.referenceStory` to a real medium-sized story everyone remembers, and revisit it as your
-team's sense of "medium" drifts.
+**Golden Story** (Clean Agile's term for the estimation anchor) rather than to an absolute scale,
+which keeps estimates honest and team-specific. The Golden Story's full body is **cached in config**
+(`sizing.goldenStory.body`), so sizing compares against a stable snapshot and never re-fetches the
+anchor from the tracker.
+
+Set it — and refresh it as your team's sense of "medium" drifts — with the setup skill or by asking
+*"update the Golden Story to `#123`"*, which retrieves that ticket and copies its content into config.
 
 ## License
 

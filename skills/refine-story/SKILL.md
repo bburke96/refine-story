@@ -16,8 +16,10 @@ lives in a separate file so it can be reused by other agents.
 
 1. **Load configuration.** Follow `references/config.md` to locate and read the project's
    `.refine-story.json`. If it is missing or incomplete, prompt the user for the values you need and
-   offer to write them back. `config.tracker` selects the tracker; the reference story under
-   `config.sizing` is required before sizing (Step 4).
+   offer to write them back. `config.tracker` selects the tracker; the Golden Story under
+   `config.sizing.goldenStory` is required before sizing (Step 4). Size against the **saved**
+   `goldenStory.body` — do not re-fetch the anchor from the tracker. If no Golden Story is
+   configured, point the user at the `refine-story-setup` or `update-golden-story` skill.
 
 2. **Execute the methodology.** Follow `methodology.md` exactly, Steps 1–5. It is **interactive** —
    pause for user review after each section (title/user-story, acceptance tests, estimate, splits).

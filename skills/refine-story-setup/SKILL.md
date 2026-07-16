@@ -30,7 +30,7 @@ that block out rather than guessing.
 ## The interview
 
 Ask in this order. Use a multiple-choice prompt for the tracker and yes/no branches; use free-text
-for names, keys, and the reference story.
+for names, keys, and the Golden Story.
 
 ### 1. Tracker
 
@@ -73,12 +73,22 @@ owner/repo by hand and note that field automation can't be auto-discovered.
   how to find it (project settings → fields). Skippable if they don't track points in Jira.
 - **readyStatusName** — the status to transition to when refinement is done (default `Ready`).
 
-### 3. Sizing (all trackers)
+### 3. Sizing — the Golden Story (all trackers)
 
-- **referenceStory** — the most important value. Explain: *"Estimates are relative, so I anchor every
-  story to one your team agrees is a solid medium — 3 points. What's a real, completed story like
-  that?"* Collect `title`, a 1–3 sentence implementation-neutral `summary`, `points` (default 3),
-  and optionally its tracker `ref`. Don't skip this — without it, sizing has no anchor.
+- **goldenStory** — the most important value (Clean Agile's "Golden Story"). Explain: *"Estimates are
+  relative, so I anchor every story to one your team agrees is a solid medium — 3 points. What's a
+  real, completed story like that?"* Don't skip this — without it, sizing has no anchor.
+
+  Prefer anchoring to an existing tracker ticket:
+  - Ask for the **`ref`** (e.g. `#42` or `PROJ-42`). If a tracker is configured, **retrieve the full
+    story from the tracker** using the matching adapter (`references/github.md` or
+    `references/jira.md`) and save the entire content to **`body`** — plus its `title`. This saved
+    copy is what the `refine-story` skill sizes against, so it never re-fetches the anchor later.
+  - Set `points` (default 3) and write a 1–3 sentence implementation-neutral `summary`
+    (derive it from the retrieved body and confirm with the user).
+  - If there's no tracker or no suitable ticket, collect `title`, `summary`, and `points` by hand and
+    ask the user to paste the story's description + acceptance tests into `body`.
+
 - **scale / splitThreshold** (optional) — mention the defaults (`[1,2,3,5,8]`, split at `8`) and only
   capture overrides if the team uses a different scale.
 
@@ -97,7 +107,7 @@ owner/repo by hand and note that field automation can't be auto-discovered.
 ## Finish
 
 - Remind them to **commit `.refine-story.json`** to their repo so the whole team shares the tracker
-  target and the reference story. (It's project data, not plugin data — the plugin itself is
+  target and the Golden Story. (It's project data, not plugin data — the plugin itself is
   installed once, globally.)
 - Tell them how to use it: just ask to *"refine this story"*, *"groom `<ticket-id>`"*, or *"write
   acceptance tests for …"* — the `refine-story` skill will pick up this config automatically.

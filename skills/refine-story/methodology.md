@@ -7,7 +7,7 @@ estimate, and any recommended splits.
 This file is the **single source of truth** for the methodology. It contains no references to any
 particular agent, tool, tracker, cloud provider, or codebase. A Claude Code skill, a Cursor rule,
 a custom prompt, or a human can follow it directly. Anything project-specific (which tracker, the
-reference story, field identifiers) comes from **configuration** — see `references/config.md`.
+Golden Story, field identifiers) comes from **configuration** — see `references/config.md`.
 
 **This workflow is interactive.** After writing each section of the refined story, pause and ask
 the user to review it before continuing to the next section. Do not write the entire output at once.
@@ -48,7 +48,7 @@ Evaluate and improve the story against each criterion:
 | Criterion | Question to ask |
 |-----------|----------------|
 | **Independent** | Can this story be built and shipped without depending on another unfinished story? If not, reorder or split. |
-| **Negotiable** | Does the story leave room for dev and business to negotiate scope against cost? Details are deliberately left out so the team can trade an expensive ask for a cheaper one that delivers the same value (e.g. business wants a fancy drag-and-drop interface; dev offers plain checkboxes at a fraction of the cost). If it's over-specified with locked-in details, strip them back to the underlying need. |
+| **Negotiable** | Does the story leave room for dev and business to negotiate scope against cost? Details are deliberately left out so the team can trade an expensive ask for a cheaper one that delivers the same value. |
 | **Valuable** | Does completing this story deliver something a user or operator would notice? If it's purely internal, combine with a user-facing story or reframe. |
 | **Estimable** | Does the team have enough information to size it? If not, recommend a Spike. |
 | **Small** | Can it be done in one iteration (≤ 1 week for a small team)? If not, split it (see Step 5). |
@@ -79,39 +79,48 @@ before continuing.
 ### Step 4 — Size the story using relative pointing
 
 Story points are **relative**, not absolute. Do not estimate in hours or days. Size the story by
-comparing it to the **Reference Story** — the team's established anchor for a "medium" story worth
+comparing it to the **Golden Story** — the team's established anchor for a "medium" story worth
 **3 points**.
 
-#### The Reference Story (relative-estimation anchor)
+#### The Golden Story (Clean Agile)
 
-The reference story comes from configuration (`sizing.referenceStory` — see `references/config.md`).
-It is a real, completed story from *this* team that everyone agrees is a solid "medium," worth
-**3 points** by consensus: it touches multiple parts of the system, has clear acceptance tests, and
-is fully deliverable in one iteration.
+The Golden Story comes from configuration (`sizing.goldenStory` — see `references/config.md`). It is
+a real, completed story from *this* team that everyone agrees is a solid "medium," worth **3 points**
+by consensus: it touches multiple parts of the system, has clear acceptance tests, and is fully
+deliverable in one iteration.
 
-If no reference story is configured, **ask the user to name one** before sizing — a good anchor is
-essential to relative estimation. Offer to save it to the config for future runs.
+**Always compare against the saved copy in config, not the live tracker.** `sizing.goldenStory.body`
+holds the full story content (description + acceptance tests) copied into config precisely so sizing
+is fast and stable — do **not** re-fetch the anchor from the tracker during refinement. Read
+`sizing.goldenStory` (its `body`, `summary`, `title`, `points`) and reason against that snapshot.
 
-*The reference story should be revisited as the team completes work and its sense of "medium" drifts.*
+If no Golden Story is configured, **ask the user to name one** before sizing — a good anchor is
+essential to relative estimation. Offer to save it via the `refine-story-setup` or
+`update-golden-story` skill (they copy the full body from the tracker) so future runs have the
+snapshot ready.
+
+*The Golden Story should be revisited as the team completes work and its sense of "medium" drifts —
+refresh the saved copy with the `update-golden-story` skill.*
 
 #### Fibonacci scale
 
-| Points | Meaning | Relative to the Reference Story |
-|--------|---------|--------------------------------|
+| Points | Meaning | Relative to the Golden Story |
+|--------|---------|------------------------------|
 | **1** | Tiny — a single well-understood change | Much smaller; only one part touched, no unknowns |
 | **2** | Small — a few moving parts, low uncertainty | Smaller; fewer parts or less complexity than the anchor |
-| **3** | Medium — the Reference Story benchmark | Roughly equivalent scope and uncertainty |
+| **3** | Medium — the Golden Story benchmark | Roughly equivalent scope and uncertainty |
 | **5** | Large — significantly more complexity or unknowns | Noticeably bigger; more parts, more risk, or harder to test |
 | **8** | Very large — must be split before it can be worked | Much bigger; completing this in one iteration is unlikely |
 | **Spike** | Can't estimate — too much unknown | Time-box exploration (1–2 days) then re-estimate |
 
 **Any story estimated at the split threshold (8 by default) must be split.** Do not let it into a sprint.
 
-#### How to compare to the Reference Story
+#### How to compare to the Golden Story
 
-Think through the implementation steps for both the target story and the reference story, then ask:
+Think through the implementation steps for both the target story and the Golden Story (using the
+saved `sizing.goldenStory.body`), then ask:
 
-1. How many parts of the system does this touch compared to the reference story? (e.g. UI,
+1. How many parts of the system does this touch compared to the Golden Story? (e.g. UI,
    API/service, data store, external integrations, infrastructure)
 2. How many distinct moving parts or integration points does it have?
 3. How much of the implementation is unknown or requires discovery?
@@ -185,13 +194,13 @@ where the tracker supports it, setting the workflow **Status to "Ready"** and re
 
 ### Estimate
 
-**Comparison to the Reference Story** ("[reference title]", [reference points] pts):
-- Parts touched: [list parts for this story] vs. [parts for the reference story]
-- Moving parts: [count/description] vs. the reference story's [count]
-- Unknowns: [low / medium / high] vs. the reference story's [low/medium/high]
+**Comparison to the Golden Story** ("[golden story title]", [golden story points] pts):
+- Parts touched: [list parts for this story] vs. [parts for the Golden Story]
+- Moving parts: [count/description] vs. the Golden Story's [count]
+- Unknowns: [low / medium / high] vs. the Golden Story's [low/medium/high]
 - Test confidence: [high / medium / low]
 
-**Estimate: [1 / 2 / 3 / 5 / 8 / Spike]** — [one sentence rationale anchored to the reference comparison]
+**Estimate: [1 / 2 / 3 / 5 / 8 / Spike]** — [one sentence rationale anchored to the Golden Story comparison]
 
 > If it reaches the split threshold: this story must be split before it enters a sprint
 > (see Recommended Splits below).
@@ -212,7 +221,7 @@ where the tracker supports it, setting the workflow **Status to "Ready"** and re
 - **Velocity is a planning tool**, not a performance metric. Don't inflate estimates to look productive.
 - **Small stories reduce risk.** A story that takes more than a week is a liability — it delays
   feedback. A story at the split threshold must be split before it enters a sprint.
-- **Points are relative, not absolute.** Always anchor estimates to the Reference Story, not to
+- **Points are relative, not absolute.** Always anchor estimates to the Golden Story, not to
   hours or days. The scale is Fibonacci (1, 2, 3, 5, 8).
 - **Spikes are not optional.** If you can't estimate it, spiking is the right move, not guessing.
 - **Acceptance tests are the definition of done.** Not "code merged", not "deployed" — tests passing.
