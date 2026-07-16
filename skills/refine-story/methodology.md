@@ -48,7 +48,7 @@ Evaluate and improve the story against each criterion:
 | Criterion | Question to ask |
 |-----------|----------------|
 | **Independent** | Can this story be built and shipped without depending on another unfinished story? If not, reorder or split. |
-| **Negotiable** | Is it written as a constraint ("must use a message queue") rather than a need ("process work asynchronously")? Rewrite to preserve optionality. |
+| **Negotiable** | Does the story leave room for dev and business to negotiate scope against cost? Details are deliberately left out so the team can trade an expensive ask for a cheaper one that delivers the same value (e.g. business wants a fancy drag-and-drop interface; dev offers plain checkboxes at a fraction of the cost). If it's over-specified with locked-in details, strip them back to the underlying need. |
 | **Valuable** | Does completing this story deliver something a user or operator would notice? If it's purely internal, combine with a user-facing story or reframe. |
 | **Estimable** | Does the team have enough information to size it? If not, recommend a Spike. |
 | **Small** | Can it be done in one iteration (≤ 1 week for a small team)? If not, split it (see Step 5). |
