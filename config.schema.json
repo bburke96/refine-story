@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/refine-story/refine-story/config.schema.json",
+  "$id": "https://github.com/bburke96/refine-story/config.schema.json",
   "title": "refine-story project configuration",
   "description": "Per-project configuration for the refine-story skill. Place as .refine-story.json at the project root.",
   "type": "object",

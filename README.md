@@ -47,7 +47,7 @@ tracker, cloud, or codebase — so it is reusable well beyond Claude Code (see b
 Add this repo as a plugin marketplace, then install the `refine-story` plugin:
 
 ```
-/plugin marketplace add <owner>/refine-story
+/plugin marketplace add bburke96/refine-story
 /plugin install refine-story
 ```
 
