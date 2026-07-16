@@ -31,5 +31,12 @@
     "issueTypeForTask": "Task",
     "storyPointsFieldId": "customfield_10016",
     "readyStatusName": "Ready"
+  },
+  "linear": {
+    "teamKey": "ENG",
+    "projectName": "Q3 Roadmap",
+    "featureLabel": "Feature",
+    "taskLabel": "Chore",
+    "readyStateName": "Ready"
   }
 }

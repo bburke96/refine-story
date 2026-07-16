@@ -1,7 +1,7 @@
 {
   "name": "refine-story",
   "version": "0.1.0",
-  "description": "Refine a tracker ticket or story idea using Clean Agile principles (INVEST, acceptance tests, relative sizing). Works with GitHub Issues or Jira/Atlassian via a per-project config file.",
+  "description": "Refine a tracker ticket or story idea using Clean Agile principles (INVEST, acceptance tests, relative sizing). Works with GitHub Issues, Jira/Atlassian, or Linear via a per-project config file.",
   "author": {
     "name": "Boston Burke"
   },

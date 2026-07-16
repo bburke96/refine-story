@@ -23,6 +23,7 @@ The user provides a tracker ref for the story to anchor on:
 
 - `#42` (or a bare integer) → GitHub issue
 - `PROJ-42` → Jira issue key
+- `ENG-42` → Linear issue identifier (same shape as a Jira key — use `config.tracker` to disambiguate)
 
 If they don't give one, ask for it. If they describe a story with no ticket, fall back to collecting
 `title` / `summary` / `points` / `body` by hand (paste), but prefer a real ticket.
@@ -40,6 +41,7 @@ If they don't give one, ask for it. If they describe a story with no ticket, fal
 3. **Retrieve the ticket** via the matching adapter:
    - GitHub → `references/github.md` (read via GitHub MCP or `gh issue view … --json title,body`)
    - Jira → `references/jira.md` (get issue by key; read summary + description)
+   - Linear → `references/linear.md` (get issue by identifier; read title + description)
 
    Pull the **title** and the **full body** (description + acceptance tests). Do not summarize away
    detail — the body is the point.

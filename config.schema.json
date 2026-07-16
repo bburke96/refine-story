@@ -12,7 +12,7 @@
     },
     "tracker": {
       "description": "Which issue tracker Step 6 writes to.",
-      "enum": ["github", "jira"]
+      "enum": ["github", "jira", "linear"]
     },
     "sizing": {
       "type": "object",
@@ -80,6 +80,18 @@
         "readyStatusName": { "type": "string", "default": "Ready" }
       },
       "required": ["projectKey"]
+    },
+    "linear": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "teamKey": { "type": "string", "description": "Team key the story lives in, e.g. ENG (the prefix in issue ids like ENG-123)." },
+        "projectName": { "type": "string", "description": "Optional Linear project to attach the issue to." },
+        "featureLabel": { "type": "string", "description": "Optional label applied to user-facing stories." },
+        "taskLabel": { "type": "string", "description": "Optional label applied to infra/tooling stories." },
+        "readyStateName": { "type": "string", "default": "Ready", "description": "Workflow state to move the issue to when refinement is done." }
+      },
+      "required": ["teamKey"]
     }
   },
   "allOf": [
@@ -90,6 +102,10 @@
     {
       "if": { "properties": { "tracker": { "const": "jira" } }, "required": ["tracker"] },
       "then": { "required": ["jira"] }
+    },
+    {
+      "if": { "properties": { "tracker": { "const": "linear" } }, "required": ["tracker"] },
+      "then": { "required": ["linear"] }
     }
   ]
 }

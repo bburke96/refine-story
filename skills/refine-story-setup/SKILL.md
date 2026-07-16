@@ -38,6 +38,7 @@ Ask which tracker Step 6 should write to:
 
 - **GitHub Issues** → gather the `github` block (§2a)
 - **Jira / Atlassian** → gather the `jira` block (§2b)
+- **Linear** → gather the `linear` block (§2c)
 - **None (refined text only)** → skip the tracker block entirely; `tracker` is omitted
 
 ### 2a. GitHub
@@ -72,6 +73,21 @@ owner/repo by hand and note that field automation can't be auto-discovered.
   is available, try to discover it from the project's field metadata; otherwise ask, and tell them
   how to find it (project settings → fields). Skippable if they don't track points in Jira.
 - **readyStatusName** — the status to transition to when refinement is done (default `Ready`).
+
+### 2c. Linear
+
+Requires the Linear MCP server (`claude mcp add --transport http linear-server https://mcp.linear.app/mcp`).
+If it's available, prefer discovering values over asking the user to hunt for them.
+
+- **teamKey** — the team the stories live in, e.g. `ENG` (the prefix in issue ids like `ENG-123`). If
+  the Linear MCP is available, offer to list teams (a "list teams" tool) so the user can pick.
+- **projectName** (optional) — a Linear project to attach issues to; offer to list projects.
+- **featureLabel / taskLabel** (optional) — labels for user-facing vs. tooling stories; skippable.
+- **readyStateName** — the workflow state to move an issue to when refinement is done (default
+  `Ready`). Offer to list the team's states so they pick a real one.
+
+Note: Linear estimate is a **native numeric field**, so there's no story-points custom field to
+configure (unlike Jira). Estimation must be enabled on the team for it to take effect.
 
 ### 3. Sizing — the Golden Story (all trackers)
 

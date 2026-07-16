@@ -18,7 +18,7 @@ the user to review it before continuing to the next section. Do not write the en
 
 The user will provide one of:
 
-- A tracker ticket identifier (e.g. `#12` for GitHub, `PROJ-45` for Jira)
+- A tracker ticket identifier (e.g. `#12` for GitHub, `PROJ-45` for Jira, `ENG-45` for Linear)
 - A raw story idea in free-form text
 - A story already written but needing review
 
@@ -156,6 +156,7 @@ named in `config.tracker`:
 
 - GitHub → `references/github.md`
 - Jira / Atlassian → `references/jira.md`
+- Linear → `references/linear.md`
 
 The adapter is responsible for writing the ticket body/type/milestone (or Jira equivalents) and,
 where the tracker supports it, setting the workflow **Status to "Ready"** and recording the

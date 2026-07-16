@@ -1,13 +1,13 @@
 {
   "name": "refine-story",
-  "description": "Marketplace for the refine-story plugin — Clean Agile story refinement for GitHub Issues or Jira/Atlassian",
+  "description": "Marketplace for the refine-story plugin — Clean Agile story refinement for GitHub Issues, Jira/Atlassian, or Linear",
   "owner": {
     "name": "Boston Burke"
   },
   "plugins": [
     {
       "name": "refine-story",
-      "description": "Refine a tracker ticket or story idea using Clean Agile principles (INVEST, acceptance tests, relative sizing). Works with GitHub Issues or Jira/Atlassian via a per-project config file.",
+      "description": "Refine a tracker ticket or story idea using Clean Agile principles (INVEST, acceptance tests, relative sizing). Works with GitHub Issues, Jira/Atlassian, or Linear via a per-project config file.",
       "version": "0.1.0",
       "source": "./",
       "author": {

@@ -1,13 +1,13 @@
 ---
 name: refine-story
-description: Refine a tracker ticket or story idea using Clean Agile principles (INVEST, acceptance tests, relative sizing). Works with GitHub Issues or Jira/Atlassian via a per-project config file. Use when the user asks to refine a story, groom a ticket, or wants help writing acceptance tests.
+description: Refine a tracker ticket or story idea using Clean Agile principles (INVEST, acceptance tests, relative sizing). Works with GitHub Issues, Jira/Atlassian, or Linear via a per-project config file. Use when the user asks to refine a story, groom a ticket, or wants help writing acceptance tests.
 ---
 
 # Story Refinement — Clean Agile
 
 Refine a story using the principles from Robert C. Martin's *Clean Agile* (2019), producing a
 refined story with acceptance tests, a relative sizing estimate, and any recommended splits — then
-optionally write it to the project's issue tracker (GitHub or Jira/Atlassian).
+optionally write it to the project's issue tracker (GitHub, Jira/Atlassian, or Linear).
 
 This SKILL is a thin Claude Code adapter. The methodology itself is project- and tool-agnostic and
 lives in a separate file so it can be reused by other agents.
@@ -29,6 +29,7 @@ lives in a separate file so it can be reused by other agents.
    `config.tracker`:
    - `github` → `references/github.md`
    - `jira` → `references/jira.md`
+   - `linear` → `references/linear.md`
 
    The adapter reads/writes the ticket and sets Status → Ready and the point estimate using the
    field identifiers from configuration. Nothing about any specific project is hardcoded in this
@@ -40,3 +41,4 @@ lives in a separate file so it can be reused by other agents.
 - `references/config.md` — config schema, resolution order, and interactive fallback rules.
 - `references/github.md` — GitHub Issues + Projects adapter.
 - `references/jira.md` — Jira / Atlassian adapter.
+- `references/linear.md` — Linear adapter.

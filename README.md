@@ -5,7 +5,7 @@ Robert C. Martin's *Clean Agile* — **INVEST** review, **Given/When/Then** acce
 **relative** story-point sizing against a Golden Story, and Clean Agile **split** patterns for
 stories that are too big. Then, optionally, write the result to your issue tracker.
 
-It works with **GitHub Issues** or **Jira/Atlassian**, is **infrastructure- and
+It works with **GitHub Issues**, **Jira/Atlassian**, or **Linear**, is **infrastructure- and
 implementation-agnostic**, and hardcodes **nothing** about any one project — everything specific
 comes from a small per-project config file.
 
@@ -30,7 +30,8 @@ skills/
 │   └── references/
 │       ├── config.md       # config schema, resolution, interactive fallback
 │       ├── github.md       # GitHub Issues + Projects adapter
-│       └── jira.md         # Jira / Atlassian adapter
+│       ├── jira.md         # Jira / Atlassian adapter
+│       └── linear.md       # Linear adapter
 ├── refine-story-setup/
 │   └── SKILL.md            # interview-style setup — writes a project's .refine-story.json
 └── update-golden-story/
@@ -76,7 +77,7 @@ offers to save it back, so you can even start from an empty file. Schema: `confi
 
 | Key | Purpose |
 |-----|---------|
-| `tracker` | `"github"` or `"jira"` — which adapter Step 6 uses. |
+| `tracker` | `"github"`, `"jira"`, or `"linear"` — which adapter Step 6 uses. |
 | `sizing.goldenStory` | **The Golden Story** — the estimation anchor. A real completed story your team agrees is a solid medium (3 points). Its `body` is the full story copied from the tracker; sizing compares against that saved snapshot. Required before sizing. |
 | `sizing.scale` / `sizing.splitThreshold` | Optional. Fibonacci scale (default `[1,2,3,5,8]`) and the point value at/above which a story must be split (default `8`). |
 | `github.owner` / `github.repo` | Target repository. |
@@ -87,6 +88,10 @@ offers to save it back, so you can even start from an empty file. Schema: `confi
 | `jira.issueTypeForFeature` / `issueTypeForTask` | Issue types for user-facing vs. tooling stories. |
 | `jira.storyPointsFieldId` | Story Points custom field id (commonly `customfield_10016`). |
 | `jira.readyStatusName` | Status to transition to when refinement is done. |
+| `linear.teamKey` | Team the stories live in (e.g. `ENG`). |
+| `linear.projectName` | Optional Linear project to attach issues to. |
+| `linear.featureLabel` / `linear.taskLabel` | Optional labels for user-facing vs. tooling stories. |
+| `linear.readyStateName` | Workflow state to move the issue to when refinement is done. |
 
 ### GitHub setup
 
@@ -99,6 +104,19 @@ Requires the GitHub MCP server or the `gh` CLI authenticated for your repo. To p
 Requires an Atlassian MCP server (Atlassian's official Remote MCP, or `sooperset/mcp-atlassian`).
 The adapter detects the available tools at runtime and maps them to read/create/update/transition
 operations — see `skills/refine-story/references/jira.md`.
+
+### Linear setup
+
+Requires the Linear MCP server:
+
+```
+claude mcp add --transport http linear-server https://mcp.linear.app/mcp
+```
+
+The adapter detects the available Linear tools at runtime and maps them to read/create/update
+operations, sets the native `estimate` field, and moves the issue to your `readyStateName` workflow
+state — see `skills/refine-story/references/linear.md`. Estimation must be enabled on the team for
+points to take effect.
 
 ## The Golden Story (why it matters)
 

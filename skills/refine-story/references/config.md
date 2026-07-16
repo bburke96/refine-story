@@ -24,8 +24,8 @@ defined once in **`config.schema.json`** (the source of truth). A filled-in, cop
 **`.refine-story.example.json`**. Read those for the literal shape rather than duplicating it here.
 
 Top-level keys: `tracker`, `sizing` (with `scale`, `splitThreshold`, `goldenStory`), `github`,
-and `jira`. The notes below cover only what the schema can't express — when each value matters and
-how to source it.
+`jira`, and `linear`. The notes below cover only what the schema can't express — when each value
+matters and how to source it.
 
 ## Field notes
 
@@ -43,6 +43,9 @@ how to source it.
   use Projects or you don't want field automation.
 - **`jira.storyPointsFieldId`** — Story Points is a custom field; its id varies per Jira site
   (commonly `customfield_10016`). Confirm it via the Atlassian MCP if unknown.
+- **`linear.teamKey`** — the team stories live in (e.g. `ENG`). Linear's `estimate` is a **native**
+  numeric field, so there's no story-points custom field to configure; estimation must be enabled on
+  the team. `readyStateName` is a team workflow state, not a free-form status.
 
 ## Writing config back
 
