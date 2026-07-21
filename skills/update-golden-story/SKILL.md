@@ -1,18 +1,19 @@
 ---
 name: update-golden-story
-description: Set or refresh the Golden Story (the relative-estimation anchor) for refine-story. Takes a project tracker ref, retrieves the ticket, and copies its full content into .refine-story.json under sizing.goldenStory. Use when the user wants to set, change, refresh, or re-anchor the Golden Story / sizing baseline.
+description: Set or refresh the Golden Story (the relative-estimation anchor and output-style exemplar) for refine-story. Takes a project tracker ref, retrieves the ticket, and copies its full content into .refine-story.json under sizing.goldenStory. Use when the user wants to set, change, refresh, or re-anchor the Golden Story / sizing baseline / house style.
 tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Update the Golden Story
 
-Point the team's relative-estimation anchor at a tracker ticket and cache its full content in config,
-so the `refine-story` skill sizes against a stable saved snapshot instead of re-fetching the anchor
-every run.
+Point the team's anchor at a tracker ticket and cache its full content in config, so the
+`refine-story` skill uses a stable saved snapshot instead of re-fetching every run. The Golden Story
+has a **dual role**: it's both the relative-estimation anchor *and* the **style exemplar** the refined
+story is written to match, so refreshing it also updates the house style the output mirrors.
 
 Clean Agile calls this the **Golden Story**: a real, completed story everyone agrees is a solid
-"medium" worth **3 points**. Teams re-anchor it as their sense of "medium" drifts — that's what this
-skill is for.
+"medium" worth **3 points**. Teams re-anchor it as their sense of "medium" — or their preferred ticket
+style — drifts; that's what this skill is for.
 
 The config shape is owned by `config.schema.json`; `sizing.goldenStory` holds `{ ref, title, points,
 summary, body }`. This skill writes that block. Read `references/config.md` for resolution rules.
@@ -43,8 +44,8 @@ If they don't give one, ask for it. If they describe a story with no ticket, fal
    - Jira → `references/jira.md` (get issue by key; read summary + description)
    - Linear → `references/linear.md` (get issue by identifier; read title + description)
 
-   Pull the **title** and the **full body** (description + acceptance tests). Do not summarize away
-   detail — the body is the point.
+   Pull the **title** and the **full body** (description + acceptance criteria). Do not summarize away
+   detail — the body is the point (it's both the sizing anchor and the style exemplar).
 
 4. **Assemble `sizing.goldenStory`:**
    - `ref` — the input ref.

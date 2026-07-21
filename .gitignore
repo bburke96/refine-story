@@ -2,6 +2,11 @@
 # Ignore any stray copy so example/config never leak real project data.
 /.refine-story.json
 
+# Python / test tooling
+.venv/
+__pycache__/
+.pytest_cache/
+
 # OS / editor noise
 .DS_Store
 *.swp

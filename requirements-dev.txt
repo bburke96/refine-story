@@ -1,0 +1,6 @@
+# Dev/test dependencies for the refine-story test suite.
+#   python -m venv .venv && . .venv/bin/activate
+#   pip install -r requirements-dev.txt
+#   pytest
+pytest>=8
+jsonschema>=4

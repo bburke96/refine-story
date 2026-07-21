@@ -29,15 +29,19 @@ matters and how to source it.
 
 ## Field notes
 
-- **`tracker`** — drives which adapter Step 6 uses. If the user only wants the refined-story text
+- **`tracker`** — drives which adapter Step 7 (persist) uses. If the user only wants the refined-story text
   and no ticket write, `tracker` is not needed.
-- **`sizing.goldenStory`** — the Golden Story (Clean Agile), the single most important config value.
-  Relative estimation is meaningless without a shared anchor. Its **`body`** holds the full story
-  content copied from the tracker; sizing compares against that saved snapshot, so the `refine-story`
-  skill never re-fetches the anchor from the tracker. Populate it with the `refine-story-setup` or
-  `update-golden-story` skill (both read the tracker via `ref`). When it's missing entirely, prompt:
-  *"What's a completed story your team agrees is a solid medium — worth 3 points? I'll use it as the
-  sizing anchor."*
+- **`sizing.goldenStory`** — the Golden Story (Clean Agile), the single most important config value,
+  with a **dual role**: the relative-estimation anchor *and* the **style exemplar** the refined story
+  is written to match (Step 6 mirrors its structure, acceptance-criteria form, tone, and length).
+  Relative estimation is meaningless without a shared anchor, and there is no separate template — the
+  anchor defines the output style. Its **`body`** holds the full story content copied from the
+  tracker; both sizing and rendering compare against that saved snapshot, so the `refine-story` skill
+  never re-fetches the anchor from the tracker. Because it sets the house style, pick an anchor
+  written the way the team wants its tickets to read (concise/checklist, or fuller/Gherkin).
+  Populate it with the `refine-story-setup` or `update-golden-story` skill (both read the tracker via
+  `ref`). When it's missing entirely, prompt: *"What's a completed story your team agrees is a solid
+  medium — worth 3 points? I'll use it as the sizing anchor and the style to match."*
 - **`github.project`** — GitHub Projects field ids are stable per project; capture them once. See
   `references/github.md` for the discovery commands. Omit the block entirely if the project doesn't
   use Projects or you don't want field automation.

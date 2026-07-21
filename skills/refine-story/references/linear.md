@@ -35,8 +35,8 @@ Call the "create issue" tool with:
 - `team`: `config.linear.teamKey` (resolve to a team id via a "list teams" tool if the create tool
   requires an id rather than a key).
 - `title`: the refined story title.
-- `description`: the full refined story output (user-story sentence, acceptance tests, implementation
-  notes, estimate block, splits) as Markdown — Linear descriptions are Markdown.
+- `description`: the rendered ticket body from Step 6 (mirroring the Golden Story's style) as
+  Markdown — Linear descriptions are Markdown.
 - `project`: `config.linear.projectName` if set (resolve to a project id if needed).
 - `estimate`: the Step 4 point value. **Estimate is a native numeric field in Linear** — set it
   directly, no custom field id required. (The team must have estimation enabled; if it isn't, report
@@ -63,4 +63,4 @@ rather than guessing.
 ## Notes
 
 - Unlike Jira, Linear needs no Story-Points custom field — `estimate` is built in.
-- Keep acceptance tests implementation-neutral in the description, exactly as in `methodology.md`.
+- Keep acceptance criteria implementation-neutral in the description, exactly as in `methodology.md`.

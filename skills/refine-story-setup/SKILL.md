@@ -34,7 +34,7 @@ for names, keys, and the Golden Story.
 
 ### 1. Tracker
 
-Ask which tracker Step 6 should write to:
+Ask which tracker the persist step (Step 7) should write to:
 
 - **GitHub Issues** → gather the `github` block (§2a)
 - **Jira / Atlassian** → gather the `jira` block (§2b)
@@ -91,9 +91,13 @@ configure (unlike Jira). Estimation must be enabled on the team for it to take e
 
 ### 3. Sizing — the Golden Story (all trackers)
 
-- **goldenStory** — the most important value (Clean Agile's "Golden Story"). Explain: *"Estimates are
-  relative, so I anchor every story to one your team agrees is a solid medium — 3 points. What's a
-  real, completed story like that?"* Don't skip this — without it, sizing has no anchor.
+- **goldenStory** — the most important value (Clean Agile's "Golden Story"), with a **dual role**:
+  the sizing anchor *and* the style exemplar refined stories are written to match. Explain:
+  *"Estimates are relative, so I anchor every story to one your team agrees is a solid medium —
+  3 points. I'll also match its writing style, so pick one written the way you want your tickets to
+  read — concise with a checklist, or fuller with Given/When/Then. What's a real, completed story
+  like that?"* Don't skip this — without it, sizing has no anchor and the output has no style to
+  mirror.
 
   Prefer anchoring to an existing tracker ticket:
   - Ask for the **`ref`** (e.g. `#42` or `PROJ-42`). If a tracker is configured, **retrieve the full
@@ -103,10 +107,14 @@ configure (unlike Jira). Estimation must be enabled on the team for it to take e
   - Set `points` (default 3) and write a 1–3 sentence implementation-neutral `summary`
     (derive it from the retrieved body and confirm with the user).
   - If there's no tracker or no suitable ticket, collect `title`, `summary`, and `points` by hand and
-    ask the user to paste the story's description + acceptance tests into `body`.
+    ask the user to paste the story's description + acceptance criteria into `body`.
 
 - **scale / splitThreshold** (optional) — mention the defaults (`[1,2,3,5,8]`, split at `8`) and only
   capture overrides if the team uses a different scale.
+
+There is **no template to configure** — the Golden Story defines the output style (structure,
+acceptance-criteria form, tone, length). That's why §3 asks them to pick an anchor written the way
+they want their tickets to read.
 
 ## Write & validate
 
@@ -126,6 +134,6 @@ configure (unlike Jira). Estimation must be enabled on the team for it to take e
   target and the Golden Story. (It's project data, not plugin data — the plugin itself is
   installed once, globally.)
 - Tell them how to use it: just ask to *"refine this story"*, *"groom `<ticket-id>`"*, or *"write
-  acceptance tests for …"* — the `refine-story` skill will pick up this config automatically.
+  acceptance criteria for …"* — the `refine-story` skill will pick up this config automatically.
 - If the `refine-story` skill isn't installed/available, point them at the plugin's README for the
   install step (marketplace add, or copy `skills/refine-story/` into `.claude/skills/`).

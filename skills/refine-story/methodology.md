@@ -1,8 +1,9 @@
 # Story Refinement — Clean Agile Methodology
 
 A tool-neutral playbook for refining a story using the principles from Robert C. Martin's
-*Clean Agile* (2019). Its output is a refined story with acceptance tests, a relative sizing
-estimate, and any recommended splits.
+*Clean Agile* (2019). Its output is a refined story with acceptance criteria, a relative sizing
+estimate, and any recommended splits — written in the **style of the team's Golden Story**, not a
+fixed format.
 
 This file is the **single source of truth** for the methodology. It contains no references to any
 particular agent, tool, tracker, cloud provider, or codebase. A Claude Code skill, a Cursor rule,
@@ -30,7 +31,7 @@ If a ticket identifier is given, read it from the configured tracker before proc
 
 ### Step 1 — Understand the story
 
-Parse the raw input. Extract:
+Parse the raw input. Extract, for your own reasoning:
 
 - **Who** is the user or beneficiary?
 - **What** do they want to do?
@@ -38,8 +39,13 @@ Parse the raw input. Extract:
 
 If the story is missing any of these, infer from context where possible. Flag gaps explicitly.
 
-**Pause here.** Present the title and user story sentence (As a / I want to / So that), then ask
-the user to confirm or correct before continuing.
+How you *write this up* is not fixed — **match the Golden Story's style** (see Step 6). Often that's a
+concise, action-oriented title and a short description that directly states the work. Use an
+`As a / I want to / So that` sentence only if that is how the Golden Story is written. Write only as
+much as the story needs.
+
+**Pause here.** Present the title and description, then ask the user to confirm or correct before
+continuing.
 
 ### Step 2 — Apply the INVEST criteria
 
@@ -52,29 +58,30 @@ Evaluate and improve the story against each criterion:
 | **Valuable** | Does completing this story deliver something a user or operator would notice? If it's purely internal, combine with a user-facing story or reframe. |
 | **Estimable** | Does the team have enough information to size it? If not, recommend a Spike. |
 | **Small** | Can it be done in one iteration (≤ 1 week for a small team)? If not, split it (see Step 5). |
-| **Testable** | Can you write a concrete acceptance test for it right now? If not, the story is too vague. |
+| **Testable** | Can you write a concrete acceptance criterion for it right now? If not, the story is too vague. |
 
-### Step 3 — Write acceptance tests
+### Step 3 — Write acceptance criteria
 
-Write 3–6 acceptance tests in **Given / When / Then** format. These are the definition of done —
-not implementation tasks.
+Acceptance criteria are the definition of done — not implementation tasks. **Write them in the form
+the Golden Story uses**: a checklist of outcomes, `Given / When / Then` scenarios, or short prose.
+Don't impose Given/When/Then if the anchor doesn't use it.
 
-Rules (from Clean Agile):
+Whatever the form, the Clean Agile principles still hold:
 
-- **Acceptance tests describe a change in the external behavior of the system from the user's
-  perspective.** If a test cannot be verified by watching what happens on screen or in a response
-  to the user, it is not an acceptance test.
-- Each test must be verifiable by a non-developer (QA, PM, stakeholder) without reading the code.
-- Tests describe behavior, not implementation — no mentions of database schema, background jobs,
-  caching, retries, idempotency, or other internal concerns.
-- Tests are the story's contract — if they all pass, the story is done.
-- Include at least one unhappy-path / error case that the user would observe.
+- **Describe user-observable behavior**, not implementation. If a criterion can't be checked by
+  watching what happens on screen or in a response to the user, it isn't one — no database schema,
+  background jobs, caching, retries, or idempotency here.
+- Each must be verifiable by a non-developer (QA, PM, stakeholder) without reading the code.
+- They are the story's contract — if they all hold, the story is done.
+- Cover at least one edge / unhappy case the user would notice.
+- **Write only as many as the story needs** — don't pad to hit a count.
 
-If internal implementation concerns arise (e.g. idempotency, retry logic, schema design), capture
-them separately under **Implementation Notes** — not in the acceptance tests.
+If internal implementation concerns arise (e.g. idempotency, retry logic, schema design) *and* the
+Golden Story tends to record them, capture them separately (e.g. under **Implementation Notes**) —
+never mixed into the acceptance criteria. If the anchor keeps things lean, leave them out.
 
-**Pause here.** Present the acceptance tests and implementation notes, then ask the user to review
-before continuing.
+**Pause here.** Present the acceptance criteria (and any implementation notes), then ask the user to
+review before continuing.
 
 ### Step 4 — Size the story using relative pointing
 
@@ -86,13 +93,15 @@ comparing it to the **Golden Story** — the team's established anchor for a "me
 
 The Golden Story comes from configuration (`sizing.goldenStory` — see `references/config.md`). It is
 a real, completed story from *this* team that everyone agrees is a solid "medium," worth **3 points**
-by consensus: it touches multiple parts of the system, has clear acceptance tests, and is fully
-deliverable in one iteration.
+by consensus: it touches multiple parts of the system, has clear acceptance criteria, and is fully
+deliverable in one iteration. It has a **dual role** — the sizing anchor here, and the **style
+exemplar** the refined story is written to match in Step 6.
 
 **Always compare against the saved copy in config, not the live tracker.** `sizing.goldenStory.body`
-holds the full story content (description + acceptance tests) copied into config precisely so sizing
-is fast and stable — do **not** re-fetch the anchor from the tracker during refinement. Read
-`sizing.goldenStory` (its `body`, `summary`, `title`, `points`) and reason against that snapshot.
+holds the full story content (description + acceptance criteria) copied into config precisely so
+sizing is fast and stable — do **not** re-fetch the anchor from the tracker during refinement. Read
+`sizing.goldenStory` (its `body`, `summary`, `title`, `points`) and reason against that snapshot. The
+same saved `body` is the exemplar Step 6 mirrors for structure, format, and voice.
 
 If no Golden Story is configured, **ask the user to name one** before sizing — a good anchor is
 essential to relative estimation. Offer to save it via the `refine-story-setup` or
@@ -124,7 +133,7 @@ saved `sizing.goldenStory.body`), then ask:
    API/service, data store, external integrations, infrastructure)
 2. How many distinct moving parts or integration points does it have?
 3. How much of the implementation is unknown or requires discovery?
-4. How confident are you that the acceptance tests are complete and correct?
+4. How confident are you that the acceptance criteria are complete and correct?
 
 If the target story touches fewer parts, has fewer unknowns, and is easier to test → it's smaller
 (1 or 2). If it's roughly equivalent → 3. If it's broader, riskier, or harder to test → 5 or 8
@@ -147,9 +156,30 @@ Each split story must itself pass INVEST.
 **Pause here.** If splits are recommended, present them and ask the user to confirm the breakdown
 before proceeding to Step 6.
 
-### Step 6 — Persist to the tracker
+### Step 6 — Render the ticket body
 
-After presenting the refined story output, ask the user: **"Should I create/update this in the tracker?"**
+Write the Markdown that becomes the tracker issue body by **mirroring the Golden Story**. There is no
+template to configure — the anchor *is* the template.
+
+Read `sizing.goldenStory.body` and match:
+
+- its **structure and sections** (headings, or none) — don't add sections it doesn't have;
+- its **acceptance-criteria form** (checklist / `Given-When-Then` / prose);
+- its **tone and length** — if the anchor is terse, be terse; write only as much as is needed.
+
+If the anchor includes a kind of content the methodology didn't itself produce (e.g. a test plan, a
+rollout note, links), **infer it** from the refined story so the shape stays consistent. If the
+anchor is lean and omits such things, omit them too.
+
+The goal is a ticket that looks like it belongs next to the Golden Story in the same backlog — same
+voice, same shape, same level of detail.
+
+**Pause here.** Present the rendered body — noting anything you inferred — and ask the user to review
+it before it is written to the tracker.
+
+### Step 7 — Persist to the tracker
+
+After presenting the rendered body, ask the user: **"Should I create/update this in the tracker?"**
 
 If yes (or if the user already confirmed upfront), hand off to the tracker adapter for the tracker
 named in `config.tracker`:
@@ -158,73 +188,70 @@ named in `config.tracker`:
 - Jira / Atlassian → `references/jira.md`
 - Linear → `references/linear.md`
 
-The adapter is responsible for writing the ticket body/type/milestone (or Jira equivalents) and,
-where the tracker supports it, setting the workflow **Status to "Ready"** and recording the
-**point estimate** from Step 4 using the field identifiers in configuration.
+The adapter writes the **rendered body from Step 6** as the ticket body (choosing type/milestone or
+Jira/Linear equivalents by whether the story is user-facing or tooling) and, where the tracker
+supports it, sets the workflow **Status to "Ready"** and records the **point estimate** from Step 4
+using the field identifiers in configuration.
 
 ---
 
-## Output Format
+## Output
+
+The refined story has up to four parts — **title + description**, **acceptance criteria**,
+**estimate**, and **recommended splits** (only when needed). Their wording, headings, and level of
+detail are **not fixed**: mirror the Golden Story (Step 6). The same story can be written two very
+different — both valid — ways depending on the anchor:
+
+*Golden Story written Clean-Agile style → a fuller, Gherkin output:*
 
 ```
-## Refined Story
+**Title:** Export dashboard as PDF
 
-**Title:** [concise, action-oriented title]
+**As a** report viewer, **I want to** export a dashboard as a PDF, **so that** I can share it offline.
 
-**As a** [user type],
-**I want to** [action],
-**So that** [benefit].
-
----
-
-### Acceptance Tests
-
-1. **Given** [precondition] **When** [action] **Then** [expected outcome]
-2. **Given** [precondition] **When** [action] **Then** [expected outcome]
-3. ...
-
-### Implementation Notes
-
-> Internal concerns the developer must solve that are not user-observable. Not acceptance
-> criteria — no test will verify these directly.
-
-- [e.g. writes must be idempotent in case the operation is retried]
-- [e.g. data model TBD — may extend an existing table or introduce a new one]
-
----
+### Acceptance Criteria
+1. **Given** a dashboard **When** I choose Export → PDF **Then** a PDF of the current view downloads.
+2. **Given** the export fails **When** I retry **Then** I see an error and the page stays usable.
 
 ### Estimate
-
-**Comparison to the Golden Story** ("[golden story title]", [golden story points] pts):
-- Parts touched: [list parts for this story] vs. [parts for the Golden Story]
-- Moving parts: [count/description] vs. the Golden Story's [count]
-- Unknowns: [low / medium / high] vs. the Golden Story's [low/medium/high]
-- Test confidence: [high / medium / low]
-
-**Estimate: [1 / 2 / 3 / 5 / 8 / Spike]** — [one sentence rationale anchored to the Golden Story comparison]
-
-> If it reaches the split threshold: this story must be split before it enters a sprint
-> (see Recommended Splits below).
-
----
-
-### Recommended Splits (if applicable)
-
-- **[Story A title]** — [what it covers] (estimated X pts)
-- **[Story B title]** — [what it covers] (estimated X pts)
+Compared to "Password reset via email link" (3 pts): similar parts, low unknowns → **3**.
 ```
+
+*Golden Story written Linear style → a concise checklist output:*
+
+```
+**Export dashboard as PDF**
+
+Add a PDF export to the reports page so a viewer can download the current dashboard.
+
+**Acceptance criteria**
+- [ ] Export → PDF downloads the current view
+- [ ] A failed export shows an error and leaves the page usable
+
+**Estimate:** 3 — similar scope to "Password reset via email link" (3 pts), few unknowns.
+```
+
+Whatever the shape, the **estimate** always carries two things: the comparison to the Golden Story
+and a point value.
+
+**Estimate: [1 / 2 / 3 / 5 / 8 / Spike]** — one-sentence rationale anchored to the Golden Story. If it
+reaches the split threshold, the story must be split before it enters a sprint, and the splits are
+listed in the anchor's style.
 
 ---
 
 ## Clean Agile Principles to Apply
 
-- **Stories are placeholders for a conversation**, not specs. The acceptance tests are the spec.
+- **Stories are placeholders for a conversation**, not specs. The acceptance criteria are the spec.
 - **Velocity is a planning tool**, not a performance metric. Don't inflate estimates to look productive.
 - **Small stories reduce risk.** A story that takes more than a week is a liability — it delays
   feedback. A story at the split threshold must be split before it enters a sprint.
 - **Points are relative, not absolute.** Always anchor estimates to the Golden Story, not to
   hours or days. The scale is Fibonacci (1, 2, 3, 5, 8).
 - **Spikes are not optional.** If you can't estimate it, spiking is the right move, not guessing.
-- **Acceptance tests are the definition of done.** Not "code merged", not "deployed" — tests passing.
+- **Acceptance criteria are the definition of done** — in whatever form your team writes them
+  (checklist, Given/When/Then, prose). Not "code merged", not "deployed" — the criteria hold.
+- **Write only as much as the story needs.** Match the Golden Story; don't impose a heavier format
+  (user-story sentences, Gherkin) than the anchor uses. Concise, direct issues are good issues.
 - **Stories should deliver value independently.** If a story only has value when combined with three
   others, it's a task, not a story. Combine or reframe.

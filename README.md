@@ -1,9 +1,11 @@
 # refine-story
 
 Refine a story idea or tracker ticket into a well-formed backlog item using the principles from
-Robert C. Martin's *Clean Agile* — **INVEST** review, **Given/When/Then** acceptance tests,
-**relative** story-point sizing against a Golden Story, and Clean Agile **split** patterns for
-stories that are too big. Then, optionally, write the result to your issue tracker.
+Robert C. Martin's *Clean Agile* — **INVEST** review, **acceptance criteria**, **relative**
+story-point sizing against a Golden Story, and Clean Agile **split** patterns for stories that are too
+big. The output isn't forced into a fixed shape: it's **written in the style of your Golden Story**,
+so concise Linear-style tickets and fuller Given/When/Then ones are equally at home. Then, optionally,
+write the result to your issue tracker.
 
 It works with **GitHub Issues**, **Jira/Atlassian**, or **Linear**, is **infrastructure- and
 implementation-agnostic**, and hardcodes **nothing** about any one project — everything specific
@@ -13,9 +15,10 @@ comes from a small per-project config file.
 
 An interactive, review-at-each-step refinement that yields:
 
-- A tightened **title** and `As a / I want to / So that` user story
-- 3–6 **acceptance tests** in Given/When/Then, verifiable by a non-developer, plus separate
-  **implementation notes** for internal concerns
+- A tightened **title and description**, in your Golden Story's voice (a concise action title, or an
+  `As a / I want to / So that` sentence — whatever the anchor uses)
+- **Acceptance criteria** — a checklist, Given/When/Then, or prose (matching the anchor), verifiable
+  by a non-developer, only as many as the story needs
 - A **relative estimate** (Fibonacci: 1, 2, 3, 5, 8, or Spike) anchored to your team's Golden Story
 - **Recommended splits** when a story is too large to fit one iteration
 - Optionally, a created/updated ticket with **Status → Ready** and the **point estimate** recorded
@@ -36,6 +39,8 @@ skills/
 │   └── SKILL.md            # interview-style setup — writes a project's .refine-story.json
 └── update-golden-story/
     └── SKILL.md            # set/refresh the sizing anchor from a tracker ticket
+
+tests/                      # pytest suite — schema guards + headless skill execution
 ```
 
 The methodology is deliberately separated from any tool or model. `methodology.md` names no agent,
@@ -61,8 +66,8 @@ tests for …"*.
 
 Point your agent (Cursor rule, custom prompt, an MCP prompt, or a teammate) at
 `skills/refine-story/methodology.md` and a `.refine-story.json`. The methodology is plain Markdown
-with no tool bindings; supply your own tracker integration for Step 6, or run Steps 1–5 and paste
-the output into your tracker by hand.
+with no tool bindings; supply your own tracker integration for Step 7 (persist), or run Steps 1–6
+and paste the rendered body into your tracker by hand.
 
 ## Configure
 
@@ -77,8 +82,8 @@ offers to save it back, so you can even start from an empty file. Schema: `confi
 
 | Key | Purpose |
 |-----|---------|
-| `tracker` | `"github"`, `"jira"`, or `"linear"` — which adapter Step 6 uses. |
-| `sizing.goldenStory` | **The Golden Story** — the estimation anchor. A real completed story your team agrees is a solid medium (3 points). Its `body` is the full story copied from the tracker; sizing compares against that saved snapshot. Required before sizing. |
+| `tracker` | `"github"`, `"jira"`, or `"linear"` — which adapter the persist step uses. |
+| `sizing.goldenStory` | **The Golden Story** — a real completed story your team agrees is a solid medium (3 points), with a **dual role**: the estimation anchor *and* the style exemplar the output is written to match. Its `body` (full story copied from the tracker) is the saved snapshot used for both. Required before sizing. See [The Golden Story](#the-golden-story-why-it-matters). |
 | `sizing.scale` / `sizing.splitThreshold` | Optional. Fibonacci scale (default `[1,2,3,5,8]`) and the point value at/above which a story must be split (default `8`). |
 | `github.owner` / `github.repo` | Target repository. |
 | `github.defaultMilestone` | Optional milestone attached on create. |
@@ -123,11 +128,77 @@ points to take effect.
 Story points are **relative**, not hours. The skill sizes each story by comparing it to *your*
 **Golden Story** (Clean Agile's term for the estimation anchor) rather than to an absolute scale,
 which keeps estimates honest and team-specific. The Golden Story's full body is **cached in config**
-(`sizing.goldenStory.body`), so sizing compares against a stable snapshot and never re-fetches the
-anchor from the tracker.
+(`sizing.goldenStory.body`), so it compares against a stable snapshot and never re-fetches the anchor
+from the tracker.
 
-Set it — and refresh it as your team's sense of "medium" drifts — with the setup skill or by asking
-*"update the Golden Story to `#123`"*, which retrieves that ticket and copies its content into config.
+The anchor has a **dual role**: it's also the **style exemplar**. Rather than impose a fixed template,
+the skill writes each refined story to match the Golden Story — its structure, its acceptance-criteria
+form (checklist / Given/When/Then / prose), its tone, and its length. Pick an anchor written the way
+you want your tickets to read and every refinement follows suit; there's nothing else to configure.
+
+Set it — and refresh it as your team's sense of "medium" (or house style) drifts — with the setup
+skill or by asking *"update the Golden Story to `#123`"*, which retrieves that ticket and copies its
+content into config.
+
+## Tests
+
+The suite in `tests/` has two layers, run with `pytest`:
+
+- **Fast schema guards** (`test_fixtures_valid.py`) — validate the example config and every test
+  fixture against `config.schema.json`. No API, instant.
+- **Headless skill execution** (`test_refine_story.py`, marked `llm`) — actually run the skill via
+  `claude -p --plugin-dir .` against a fixture story in a throwaway workspace, and verify **output
+  style follows the Golden Story**: the same story refined against a Gherkin-style anchor comes out
+  with a user-story sentence + Given/When/Then, while against a concise Linear-style anchor it comes
+  out as a checklist with *neither* the user-story ritual nor Gherkin — and both still carry a point
+  estimate. Assertions are structural (not exact-match), since model output isn't deterministic.
+  Tests use read-only tools and tracker-less configs, so a run never writes to any tracker.
+
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install -r requirements-dev.txt
+
+pytest                 # everything (the llm tests invoke `claude`, so they're slow + cost tokens)
+pytest -m "not llm"    # fast schema guards only
+```
+
+The `llm` tests need the `claude` CLI on your PATH and authenticated; they **skip** (not fail) when
+it's absent. Override the model with `REFINE_STORY_TEST_MODEL` (default `sonnet`) and the per-run
+timeout with `REFINE_STORY_TEST_TIMEOUT` seconds.
+
+## Output style — matched to your Golden Story
+
+There's no template to configure and no house style baked in. The refined story is written to **mirror
+your Golden Story**, so the same story comes out differently for different teams — both valid:
+
+**Golden Story written Clean-Agile style → a fuller, Gherkin output**
+
+```
+**Title:** Export dashboard as PDF
+
+**As a** report viewer, **I want to** export a dashboard as a PDF, **so that** I can share it offline.
+
+### Acceptance Criteria
+1. **Given** a dashboard **When** I choose Export → PDF **Then** a PDF of the current view downloads.
+2. **Given** the export fails **When** I retry **Then** I see an error and the page stays usable.
+```
+
+**Golden Story written Linear style → a concise checklist output**
+
+```
+**Export dashboard as PDF**
+
+Add a PDF export to the reports page so a viewer can download the current dashboard.
+
+**Acceptance criteria**
+- [ ] Export → PDF downloads the current view
+- [ ] A failed export shows an error and leaves the page usable
+```
+
+The methodology's *thinking* (INVEST, testable/observable behavior, relative sizing, splits) is the
+same either way — only the rendered shape follows the anchor, and the skill writes **only as much as
+the story needs**. Change the style for everything by pointing the Golden Story at a differently-written
+ticket (*"update the Golden Story to `#123`"*).
 
 ## License
 

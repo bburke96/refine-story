@@ -24,8 +24,7 @@ Use `mcp__github__issue_write` with:
 - `owner`: `config.github.owner`
 - `repo`: `config.github.repo`
 - `title`: the refined story title
-- `body`: the full refined story output (user-story sentence, acceptance tests, implementation
-  notes, estimate block, splits if any) as Markdown
+- `body`: the rendered ticket body from Step 6 (mirroring the Golden Story's style) as Markdown
 - `type`: `Feature` for user-facing stories, `Task` for infrastructure/tooling stories
 - `milestone`: `config.github.defaultMilestone` if set (resolve its number if the API needs one)
 
