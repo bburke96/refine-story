@@ -37,8 +37,8 @@ Call the "create issue" tool (`createJiraIssue` / `jira_create_issue`) with:
 
 - `projectKey`: `config.jira.projectKey`
 - `summary`: the refined story title
-- `description`: the full refined story output (user-story sentence, acceptance tests, implementation
-  notes, estimate block, splits). Provide Markdown; the server converts to ADF as needed.
+- `description`: the rendered ticket body from Step 6 (mirroring the Golden Story's style). Provide
+  Markdown; the server converts to ADF as needed.
 - `issueType`: `config.jira.issueTypeForFeature` for user-facing stories, `issueTypeForTask` for
   infrastructure/tooling stories.
 - Story points: set `config.jira.storyPointsFieldId` to the Step 4 point value (pass it in the
@@ -64,4 +64,4 @@ description with the refined content and set the story-points field. **Do not** 
 
 - Story Points is a custom field whose id varies per site (commonly `customfield_10016`). If
   unknown, the create/edit tools or a field-listing tool can reveal it; offer to save it to config.
-- Keep acceptance tests implementation-neutral in the description, exactly as in `methodology.md`.
+- Keep acceptance criteria implementation-neutral in the description, exactly as in `methodology.md`.

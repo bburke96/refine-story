@@ -30,7 +30,7 @@
           "default": 8
         },
         "goldenStory": {
-          "description": "The Golden Story (Clean Agile): the relative-estimation anchor — a real completed story the team agrees is a solid medium (3 points). Its body is copied into config so sizing compares against a saved snapshot without re-fetching from the tracker.",
+          "description": "The Golden Story (Clean Agile): a real completed story the team agrees is a solid medium (3 points). It has a dual role — the relative-estimation anchor AND the style exemplar the refined story is written to match. Its body is copied into config so both sizing and rendering use a saved snapshot without re-fetching from the tracker.",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -38,7 +38,7 @@
             "title": { "type": "string" },
             "points": { "type": "number", "default": 3 },
             "summary": { "type": "string", "description": "1-3 implementation-neutral sentences describing the anchor." },
-            "body": { "type": "string", "description": "The full story content copied from the tracker (description + acceptance tests). The saved snapshot used for sizing comparisons." }
+            "body": { "type": "string", "description": "The full story content copied from the tracker (description + acceptance criteria). The saved snapshot used for sizing comparisons and as the style exemplar the output mirrors." }
           },
           "required": ["title", "points"]
         }
